@@ -1,55 +1,31 @@
-# Docker file to run AWS CLI, S3CMD and RDS tools.
-FROM ruby:2.3.1-alpine
-MAINTAINER Claudio Fofiu <claudio@monogram.design>
+FROM alpine:3.4
 
-ENV S3_TMP /tmp/s3cmd.zip
-ENV S3_ZIP /tmp/s3cmd-master
-ENV RDS_TMP /tmp/RDSCLi.zip
-ENV RDS_VERSION 1.19.004
-ENV JAVA_HOME /usr/lib/jvm/default-jvm
-ENV AWS_RDS_HOME /usr/local/RDSCli-${RDS_VERSION}
-ENV PATH ${PATH}:${AWS_RDS_HOME}/bin:${JAVA_HOME}/bin:${AWS_RDS_HOME}/bin
-ENV PAGER more
+# skip installing gem documentation
+RUN mkdir -p /usr/local/etc \
+	&& { \
+		echo 'install: --no-document'; \
+		echo 'update: --no-document'; \
+	} >> /usr/local/etc/gemrc
 
-WORKDIR /tmp
+ENV RUBY_MAJOR 2.4
+ENV RUBY_VERSION 2.4.1
+ENV RUBY_DOWNLOAD_SHA256 4fc8a9992de3e90191de369270ea4b6c1b171b7941743614cc50822ddc1fe654
+ENV RUBYGEMS_VERSION 2.6.12
 
-RUN apk --no-cache add \
-      bash \
-      bash-completion \
-      groff \
-      less \
-      curl \
-      jq \
-      ruby \
-      ruby-rake \
-      ruby-rdoc \
-      ruby-bundler \
-      py-pip \
-      python \
-      openssh &&\
-      pip install --upgrade \
-      awscli \
-      pip \
-      python-dateutil &&\
-    ln -s /usr/bin/aws_bash_completer /etc/profile.d/aws_bash_completer.sh &&\
-    curl -sSL --output ${S3_TMP} https://github.com/s3tools/s3cmd/archive/master.zip &&\
-    curl -sSL --output ${RDS_TMP} http://s3.amazonaws.com/rds-downloads/RDSCli.zip &&\
-    unzip -q ${S3_TMP} -d /tmp &&\
-    unzip -q ${RDS_TMP} -d /tmp &&\
-    mv ${S3_ZIP}/S3 ${S3_ZIP}/s3cmd /usr/bin/ &&\
-    mv /tmp/RDSCli-${RDS_VERSION} /usr/local/ &&\
-    rm -rf /tmp/* &&\
-    mkdir ~/.aws &&\
-    chmod 700 ~/.aws
-
-# Expose volume for adding credentials
-VOLUME ["~/.aws"]
-
-CMD ["/bin/bash", "--login"]
-
-
-
-
+# some of ruby's build scripts are written in ruby
+#   we purge system ruby later to make sure our final image uses what we just built
+# readline-dev vs libedit-dev: https://bugs.ruby-lang.org/issues/11869 and https://github.com/docker-library/ruby/issues/75
+RUN set -ex \
+	\
+	&& apk add --no-cache --virtual .ruby-builddeps \
+		autoconf \
+		bison \
+		bzip2 \
+		bzip2-dev \
+		ca-certificates \
+		coreutils \
+		dpkg-dev dpkg \
+		gcc \
 		gdbm-dev \
 		glib-dev \
 		libc-dev \
@@ -68,6 +44,7 @@ CMD ["/bin/bash", "--login"]
 		yaml-dev \
 		zlib-dev \
 		xz \
+
     py-pip \
     python \
     openssh &&\
