@@ -47,11 +47,11 @@ RUN set -ex \
 
     py-pip \
     python \
-    openssh &&\
+    openssh \
     pip install --upgrade \
     awscli \
     pip \
-    python-dateutil &&\
+    python-dateutil \
 
 	\
 	&& wget -O ruby.tar.xz "https://cache.ruby-lang.org/pub/ruby/${RUBY_MAJOR%-rc}/ruby-$RUBY_VERSION.tar.xz" \
