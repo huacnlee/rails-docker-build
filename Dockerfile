@@ -21,6 +21,8 @@ RUN apk --no-cache add \
       curl \
       jq \
       ruby \
+      ruby-rake \
+      ruby-rdoc \
       ruby-bundler \
       py-pip \
       python \
