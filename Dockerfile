@@ -1,14 +1,6 @@
-FROM alpine:3.4
+FROM ruby:2.4.1-alpine
 
 RUN apk --no-cache update && \
-    apk --no-cache add bash python py-pip py-setuptools ca-certificates groff less && \
-    apk --no-cache add ruby ruby-rdoc && \
+    apk --no-cache add python py-pip py-setuptools ca-certificates groff less && \
     pip --no-cache-dir install awscli && \
     rm -rf /var/cache/apk/*
-
-RUN gem install bundler --no-document
-
-WORKDIR /data
-
-#CMD ["/bin/bash", "--login"]
-#CMD ["gem", "install", "bundler", "--no-document"]
