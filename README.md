@@ -1,4 +1,4 @@
-# What is docker-aws
+# What is docker-ruby-aws
 
 [![Circle CI](https://circleci.com/gh/cgswong/docker-aws/tree/master.svg?style=svg)](https://circleci.com/gh/cgswong/docker-aws/tree/master)
 
