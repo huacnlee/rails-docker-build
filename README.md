@@ -10,10 +10,10 @@ There are specific CLI tools within the full range of the AWS CLI tool chain. Ea
 
 | GitHub Branch | Docker Tag | Usage Example                       |
 | ------------- | ---------- | ----------------------------------- |
-| master        | latest     | `docker run -it cgswong/aws:latest` |
-| aws           | aws        | `docker run -it cgswong/aws:aws`    |
-| s3cmd         | s3cmd      | `docker run -it cgswong/aws:s3cmd`  |
-| rds           | rds        | `docker run -it cgswong/aws:rds`    |
+| master        | latest     | `docker run -it ccchr/docker-ruby-aws:latest` |
+| aws           | aws        | `docker run -it ccchr/docker-ruby-aws:aws`    |
+| s3cmd         | s3cmd      | `docker run -it ccchr/docker-ruby-aws:s3cmd`  |
+| rds           | rds        | `docker run -it ccchr/docker-ruby-aws:rds`    |
 
 The master/latest starts a `bash` shell so you can use whatever tool you need. For the other containers they will start with the `--version` flag which shows the version for the respective CLI tool. Simply specify whatever options you need for the respective tool (this will replace the default `--version` flag).
 
