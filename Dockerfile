@@ -20,10 +20,12 @@ RUN apk --no-cache add \
       less \
       curl \
       jq \
+      ruby \
+      ruby-bundler \
       py-pip \
       python \
       openssh &&\
-    pip install --upgrade \
+      pip install --upgrade \
       awscli \
       pip \
       python-dateutil &&\
