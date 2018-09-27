@@ -6,7 +6,7 @@ RUN apk --update add ruby-dev
 
 RUN apk --update add build-base libffi-dev
 RUN apk add --virtual .builddeps build-base ruby-dev libc-dev openssl linux-headers postgresql-dev \
-    libxml2-dev libxslt-dev git curl python-dev python py-pip py-setuptools ca-certificates nodejs docker
+    libxml2-dev libxslt-dev git curl python-dev python py-pip py-setuptools ca-certificates nodejs docker groff less
 RUN pip install --upgrade pip
 
 RUN pip --no-cache-dir install awscli && \
