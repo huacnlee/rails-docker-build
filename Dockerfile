@@ -8,6 +8,11 @@ RUN apk --update add build-base libffi-dev ruby-dev nodejs yarn tzdata libc-dev 
     libxml2-dev libxslt-dev git curl python-dev python py-pip py-setuptools ca-certificates docker imagemagick groff less
 RUN pip install --upgrade pip
 
+# Add UpYun Cli
+RUN curl -sSL https://l.ruby-china.com/downloads/upx-linux-amd64-alpine-v0.2.4 -o upx && \
+    mv upx /usr/local/bin && \
+    chmod +x /usr/local/bin/upx
+
 RUN pip --no-cache-dir install awscli && \
     rm -rf /var/cache/apk/*
 
