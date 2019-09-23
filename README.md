@@ -14,6 +14,13 @@ Docker Image for Rails application build in CI.
 - Python Dev
 - Git, Curl, Cmake
 
+## Base version
+
+- Alpine Linux 3.10
+- Ruby 2.6.4
+- Bundler 2.0.2
+- Node.js 12.4.0
+- Yarn 1.16.0
 
 ## For GitLab CI
 
@@ -26,10 +33,18 @@ services:
    - elasticsearch:5-alpine
    - redis:3.2.7-alpine
 
-cache:
-  paths:
-    - vendor/bundle
-    - node_modules
+.default-cache:
+  cache:
+    key: "rails-docker-normal-cache"
+    paths:
+      - .bundle/
+      - vendor/ruby/
+      - vendor/cache/
+      - .yarn-cache/
+      - node_modules/
+      - tmp/cache/webpacker/
+      - tmp/cache/assets/
+    policy: pull
 
 variables:
   BUNDLE_PATH: vendor/bundle
@@ -40,13 +55,37 @@ variables:
   ELASTICSEARCH_HOST: elasticsearch:9200
   REDIS_URL: redis://redis:6379/1
 
-before_script:
-  - yarn -s
-  - bundle install --quiet
+
+install:
+  stage: install
+  extends: .default-cache
+  cache:
+    policy: pull-push
+  script:
+    - ls -lh vendor
+    - ls -lh node_modules
+    - bundle config mirror.https://rubygems.org https://gems.ruby-china.com
+    - bundle package
+    - yarn config set registry https://registry.npm.taobao.org/
+    - bundle install --path vendor -j $(nproc)
+    - yarn install --cache-folder .yarn-cache
 
 build:
+ extends: .default-cache
  stage: build
  script:
+   - bundle install --path vendor -j $(nproc)
+   - yarn install --cache-folder .yarn-cache
    - bunlde exec rake db:migrate
    - bunlde exec rails test
+
+build_assets:
+ extends: .default-cache
+ stage: build
+ cache:
+   policy: pull-push
+ script:
+   - bundle install --path vendor -j $(nproc)
+   - yarn install --cache-folder .yarn-cache
+   - bundle exec rails assets:precompile RAILS_ENV=production SECRET_KEY_BASE=fake_secure_for_compile
 ```
